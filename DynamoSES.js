@@ -9,8 +9,7 @@ const docClient = new AWS.DynamoDB.DocumentClient({region: 'ap-south-1'});
 
 var ses = new AWS.SES();
 
-//var RECEIVER = RECEIVER;
-var SENDER = 'dev1@electromech.info';
+var SENDER = 'dev1@electromech.info ';
 
 var response = {
  "isBase64Encoded": false,
@@ -19,8 +18,8 @@ var response = {
  "body": "{\"result\": \"Success.\"}"
  };
 
-exports.handle = function(e, ctx, callback) {
-
+//exports.handle = function(e, ctx, context, callback) {
+exports.handle = function(e, context, callback) {
     console.log(e);
     var params = {
         Item: {
@@ -47,7 +46,6 @@ exports.handle = function(e, ctx, callback) {
     });
 /*SES Part*/
 //==============================================================================
-
 //    exports.handle = function (e, context) {
     console.log('Received event:', e);
     sendEmail(e, function (err, data) {
@@ -66,12 +64,12 @@ function sendEmail (e, done) {
         Message: {
             Body: {
                 Text: {
-                       Data: 'Thanks '+ e.fullname + ' For Registration' ,
+                       Data:'Hello ' + e.fullname + ', We have recive your registration for Application Modernization Workshop, We will Inform You further Details ' ,
                         Charset: 'UTF-8' 
                 }
             },
             Subject: {
-                Data: 'Registration Conformation ',
+                Data:  'Thanks For Showing Intrest',
                 Charset: 'UTF-8'
             }
         },
@@ -80,50 +78,5 @@ function sendEmail (e, done) {
    // console.log('Mail sent to ' + e.email);
     ses.sendEmail(params, done);
 }
-//==============================================================================
+return response;
 };
-/*SES Part*/
-/*
-var ses = new AWS.SES();
-
-//var RECEIVER = RECEIVER;
-var SENDER = 'dev1@electromech.info';
-
-var response = {
- "isBase64Encoded": false,
- "headers": { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': 'example.com'},
- "statusCode": 200,
- "body": "{\"result\": \"Success.\"}"
- };
-
-exports.handle = function (e, context) {
-    console.log('Received event:', e);
-    sendEmail(e, function (err, data) {
-        context.done(err, null);
-    });
-};
-
-function sendEmail (e, done) {
-    var params = {
-        Destination: {
-            ToAddresses: [
-               e.email
-            ]
-        },
-        Message: {
-            Body: {
-                Text: {
-                       Data: 'Thanks '+ e.fullname + ' For Registration' ,
-                        Charset: 'UTF-8' 
-                }
-            },
-            Subject: {
-                Data: 'Registration Conformation ',
-                Charset: 'UTF-8'
-            }
-        },
-        Source: SENDER
-    };
-    console.log('Mail sent to ' + e.email);
-    ses.sendEmail(params, done);
-}*/
